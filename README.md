@@ -1,181 +1,199 @@
-# PowerShell System Administration Scripts
+# NTFS Permissions Management and Access-Based Enumeration (ABE)
 
 ## Introduction
 
-This repository contains PowerShell scripts that I use and develop while learning and performing Windows Server administration tasks.
+This project demonstrates how I implemented secure shared folder access management using Active Directory Security Groups, NTFS Permissions, and Access-Based Enumeration (ABE) in a Windows Server environment.
 
-As a Junior System Administrator, I work with Active Directory, Windows Server, file permissions, user management, and system administration tasks. The purpose of this repository is to document PowerShell commands and scripts that help automate repetitive administrative work, improve efficiency, and strengthen my PowerShell skills.
-
-The scripts included in this repository focus on real-world administration scenarios such as user management, group management, reporting, system monitoring, and file server administration.
+The objective was to ensure that users could only access and view folders relevant to their department or project. This approach improved security, reduced unauthorized access, simplified permission management, and provided a cleaner file-sharing experience for end users.
 
 ---
 
-## Objectives
+## Key Skills Demonstrated
 
-The main objectives of this repository are:
+* Active Directory Administration
+* Security Group Management
+* NTFS Permission Management
+* Access-Based Enumeration (ABE)
+* Windows Server Administration
+* PowerShell Administration
+* Group-Based Access Control
+* File Server Administration
+* Permission Troubleshooting
+* Access Management
 
-* Learn PowerShell scripting for Windows administration
-* Automate repetitive administrative tasks
-* Improve operational efficiency
-* Reduce manual errors
-* Build reusable administration tools
-* Document PowerShell learning progress
+---
+
+## Group-Based Folder Access Management
+
+To simplify permission management and improve security, I implemented a group-based access control model using Active Directory Security Groups.
+
+### Security Groups Created
+
+The following security groups were created:
+
+* GG_TeklaStructure_RW
+* GG_RevitStructure_RW
+* GG_Algisa_Tekla_RW
+* GG_KOL_ACS_RW
+
+Naming convention:
+
+* GG = Global Group
+* Project/Department Name
+* RW = Read/Write Access
+
+### Permission Assignment Strategy
+
+Instead of assigning NTFS permissions directly to individual users, permissions were assigned to Active Directory Security Groups.
+
+Users were added to the appropriate security groups based on their project requirements.
+
+This approach provided:
+
+* Centralized permission management
+* Easier user onboarding and offboarding
+* Reduced administrative effort
+* Improved security and scalability
+
+### Folder Access Configuration
+
+Each project folder was mapped to its corresponding security group.
+
+| Project Folder | Security Group       |
+| -------------- | -------------------- |
+| TeklaStructure | GG_TeklaStructure_RW |
+| RevitStructure | GG_RevitStructure_RW |
+| Algisa_Tekla   | GG_Algisa_Tekla_RW   |
+| KOL_ACS        | GG_KOL_ACS_RW        |
+
+Users assigned to a specific security group could access only the folders related to their work.
+
+### Access-Based Enumeration (ABE)
+
+After configuring NTFS permissions, Access-Based Enumeration (ABE) was enabled on the shared folders.
+
+With ABE enabled:
+
+* Users can only see folders they have permission to access.
+* Unauthorized folders remain hidden.
+* Users see only project folders relevant to their role.
+
+For example:
+
+A user who is a member of GG_TeklaStructure_RW can access and view only the TeklaStructure folder.
+
+The same user cannot view:
+
+* RevitStructure
+* Algisa_Tekla
+* KOL_ACS
+
+unless additional permissions are granted.
+
+### Permission Optimization
+
+To achieve the required access model:
+
+* Inherited permissions were reviewed and adjusted.
+* Unnecessary permissions were removed.
+* Security group memberships were validated.
+* Folder access was tested using user accounts.
+* NTFS and Share permissions were verified.
+
+### Results
+
+After implementation:
+
+* Users could access only project folders relevant to their work.
+* Unauthorized folders remained hidden.
+* Permission management became centralized through Active Directory groups.
+* Administrative overhead was reduced.
+* The file-sharing environment became more secure and organized.
 
 ---
 
 ## Environment
 
-### Technologies Used
+### Server Environment
 
 * Windows Server 2019
 * Active Directory Domain Services (AD DS)
-* PowerShell
-* DNS
-* DHCP
+* File Server Role
+* Access-Based Enumeration (ABE)
 * NTFS Permissions
-* File Services
+* PowerShell
+
+### Tools Used
+
+* Active Directory Users and Computers (ADUC)
+* Server Manager
+* File and Storage Services
+* PowerShell
+* icacls
 
 ---
 
-## Script Categories
+## PowerShell and Permission Automation
 
-### Active Directory User Management
+PowerShell and icacls were used to assist with permission verification, administration, and automation tasks.
 
-Scripts related to:
+Areas of automation included:
 
-* User creation
-* User account management
-* Password resets
-* Account unlock operations
-* User information reporting
-
-### Active Directory Group Management
-
-Scripts related to:
-
-* Security group reporting
-* Group membership verification
-* User-to-group mapping
-* Permission-related group management
-
-### Reporting and Auditing
-
-Scripts used for:
-
-* User reports
-* Computer reports
-* Group reports
-* Service status reports
-* Administrative auditing
-
-### Windows Server Administration
-
-Scripts related to:
-
-* Service management
-* Server information gathering
-* Health monitoring
-* Event log review
-* System administration tasks
-
-### File Server Administration
-
-Scripts used for:
-
-* NTFS permission verification
+* Permission validation
+* Security group verification
 * Folder permission auditing
-* Shared folder administration
-* Access management
+* Administrative reporting
 
 ---
 
-## Sample Scripts
+## Challenges Faced
 
-### List All Active Directory Users
+### Permission Inheritance Issues
 
-```powershell
-Get-ADUser -Filter * | Select Name, SamAccountName
-```
+Some folders inherited permissions from parent directories, resulting in unexpected access behavior.
 
-Purpose:
-Retrieve all Active Directory user accounts and display basic user information.
+This required reviewing inheritance settings and applying the correct permission structure.
 
----
+### Folder Visibility Issues
 
-### List All Active Directory Groups
+Certain users could not see folders even after being added to the correct security group.
 
-```powershell
-Get-ADGroup -Filter *
-```
+Troubleshooting involved validating:
 
-Purpose:
-Display all Active Directory groups available in the domain.
+* Group membership
+* NTFS permissions
+* Share permissions
+* ABE configuration
 
----
+### Permission Conflicts
 
-### List Domain Computers
-
-```powershell
-Get-ADComputer -Filter *
-```
-
-Purpose:
-Retrieve all computer objects joined to the domain.
-
----
-
-### View Running Services
-
-```powershell
-Get-Service
-```
-
-Purpose:
-Display service information and verify service status.
-
----
-
-## Challenges and Learning Experience
-
-While building these scripts, I gained practical experience in:
-
-* Understanding PowerShell syntax
-* Working with Active Directory cmdlets
-* Automating administration tasks
-* Generating reports
-* Troubleshooting script errors
-* Improving efficiency through automation
-
----
-
-## Future Enhancements
-
-Planned additions include:
-
-* Bulk user creation scripts
-* Password expiration reports
-* Disabled user reports
-* Group membership reports
-* NTFS permission reporting
-* DNS administration scripts
-* DHCP administration scripts
-* Server health monitoring scripts
+Several scenarios required verification of effective permissions due to conflicts between Share Permissions and NTFS Permissions.
 
 ---
 
 ## Lessons Learned
 
-This repository has helped strengthen my understanding of:
+This project strengthened my understanding of:
 
-* PowerShell fundamentals
-* Windows Server administration
-* Active Directory management
-* Automation concepts
-* Troubleshooting techniques
-* System administration best practices
+* Active Directory Security Groups
+* NTFS Permissions
+* Access-Based Enumeration (ABE)
+* Windows File Server Administration
+* Group-Based Access Control
+* PowerShell Administration
+* Permission Troubleshooting
+* Enterprise Security Best Practices
 
 ---
 
-## Disclaimer
+## Screenshots
 
-The scripts in this repository are created for learning, lab, and administrative automation purposes. Any production use should be tested and validated before deployment.
+Screenshots of:
+
+* Active Directory Security Groups
+* NTFS Permission Configuration
+* Shared Folder Settings
+* Access-Based Enumeration Configuration
+* Permission Validation Testing
+
+will be added in future updates.
