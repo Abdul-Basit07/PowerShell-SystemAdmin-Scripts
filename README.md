@@ -7,7 +7,18 @@ This project demonstrates how I implemented secure shared folder access manageme
 The objective was to ensure that users could only access and view folders relevant to their department or project. This approach improved security, reduced unauthorized access, simplified permission management, and provided a cleaner file-sharing experience for end users.
 
 ---
+## Automation Areas
 
+```text
+PowerShell
+│
+├── Active Directory Administration
+├── User Reporting
+├── Group Reporting
+├── Server Monitoring
+├── File Server Management
+└── Administrative Automation
+```
 ## Key Skills Demonstrated
 
 * Active Directory Administration
